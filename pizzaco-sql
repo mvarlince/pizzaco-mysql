@@ -1,0 +1,85 @@
+-- UUID -> unique ID
+
+create table customers (
+    customerID          INT Primary Key NOT NULL,
+    first_name          VARCHAR(20),
+    last_name           VARCHAR(20),
+    customer_address    VARCHAR(40),
+    phone               VARCHAR(15),
+    is_loyal            BIT(1)
+);
+
+create table pizzas (
+    pizzaID         INT Primary Key NOT NULL,
+    pizza_type      VARCHAR(20),
+    isNewYorkStyle  BIT(1),
+    slices          INT,
+    price           INT,
+    size            ENUM('S','M','L','XL')
+);
+
+create table orders (
+    orderID         INT Primary Key NOT NULL,
+    customerID      INT,
+    pizzaID         INT,
+    subtotal        INT,
+    tax             INT,    
+    total           INT,
+    INDEX par_ind (customerID),
+    CONSTRAINT fk_customer Foreign Key (customerID) REFERENCES customers(customerID),
+    INDEX par_ind2 (pizzaID),
+    CONSTRAINT fk_pizza Foreign Key (pizzaID) REFERENCES pizzas(pizzaID)
+);
+
+create table pizza_orders (
+    pizza_order_id      INT Primary Key NOT NULL,
+    orderID             INT,
+    pizzaID             INT,
+    payment_processor   VARCHAR(30),
+    index par_ind (orderID),
+    CONSTRAINT fk_orderID Foreign Key (orderID) REFERENCES orders(orderID),
+    index par_ind2 (pizzaID),
+    CONSTRAINT fk_pizzaID Foreign Key (pizzaID) REFERENCES pizzas(pizzaID)
+);
+
+/************ INSERT ************/
+
+insert into customers (customerID, first_name, last_name, customer_address, phone, is_loyal) values (
+    "1", "Yves", "Saint-Laurent", "8432 Champs Elysse Paris 36s32", "834-244-3432", ""
+);
+
+insert into customers (customerID, first_name, last_name, customer_address, phone, is_loyal) values (
+    "2", "Richard", "Young", "627 glades road Boca Raton FL 33322", "594-222-3432", ""
+);
+
+insert into pizzas (pizzaID, pizza_type, isNewYorkStyle, slices, price, size) values (
+    "1", "Cheese", "", 8, "19.99", "S"
+)
+
+insert into pizzas (pizzaID, pizza_type, isNewYorkStyle, slices, price, size) values (
+    "2", "Hawaiian", "", 8, "22.99", "L"
+)
+
+insert into pizzas (pizzaID, pizza_type, isNewYorkStyle, slices, price, size) values (
+    "3", "Meat lovers", "", 12, "22.99", "XL"
+)
+
+--insert into orders(orderID, customerID, pizzaID, subtotal, tax, total) values (
+    1, 
+    select customers.customerID from customers where first_name = "Yves", 
+    2,
+    19.99,
+    1.44,
+    21.43
+--);
+
+insert into orders(orderID, customerID, pizzaID, subtotal, tax, total) values (
+    3, 
+    1, 
+    1,
+    19.99,
+    1.44,
+    21.43
+);
+
+
